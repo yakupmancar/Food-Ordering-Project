@@ -4,7 +4,17 @@ import { createContext, useContext, useState } from "react";
 interface AppContextType {
   selectedCategory: string | null;
   setSelectedCategory: (category: string) => void;
-  addToCart: (userId: string, foodId: string, quantity: number) => void;
+  addToCart: (
+    userId: string,
+    foodId: string,
+    foodName: string,
+    foodCategory: string,
+    foodPrice: number,
+    foodImageUrl: string,
+    quantity: number
+  ) => void;
+  getCart: (userId: string) => void;
+  cart: any;
 }
 
 //Build a context
@@ -14,7 +24,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // category stuff
+  //! CATEGORY
   const updateCategory = (category: string) => {
     if (selectedCategory === category) {
       setSelectedCategory(null);
@@ -23,20 +33,52 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  //cart stuff
+  //**********************************************************************************************************
+
+  //! CART
+  const [cart, setCart] = useState<any>(null);
+
   const addToCart = async (
     userId: string,
     foodId: string,
+    foodName: string,
+    foodCategory: string,
+    foodPrice: number,
+    foodImageUrl: string,
     quantity: number
   ) => {
     try {
-      const response = await axios.post("http://localhost:5001/api/cart", {
+      const response = await axios.post("http://localhost:5000/api/cart", {
         userId,
-        items: [{ food: foodId, quantity }],
+        items: [
+          {
+            foodId,
+            foodName,
+            foodCategory,
+            foodPrice,
+            foodImageUrl,
+            quantity,
+          },
+        ],
       });
       console.log("Cart updated:", response.data);
+
+      await getCart(userId);
     } catch (error) {
       console.error("Error adding to cart:", error);
+    }
+  };
+
+  const getCart = async (userId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/api/cart/${userId}`
+      );
+      console.log("Api response", response.data);
+      setCart(response.data);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      setCart(null);
     }
   };
 
@@ -46,6 +88,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         selectedCategory,
         setSelectedCategory: updateCategory,
         addToCart,
+        getCart,
+        cart,
       }}
     >
       {children}

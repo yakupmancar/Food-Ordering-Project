@@ -25,7 +25,11 @@ const FoodModel = mongoose.model<foodInterface>("Food", foodSchema);
 //*********************************************************************************************************************
 
 interface CartItem {
-  food: mongoose.Types.ObjectId;
+  foodId: string;
+  foodName: string;
+  foodCategory: string;
+  foodPrice: number;
+  foodImageUrl: string;
   quantity: number;
 }
 
@@ -39,58 +43,59 @@ const cartSchema = new Schema<cartInterface>(
     userId: { type: String, required: true },
     items: [
       {
-        food: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Food",
-          required: true,
-        }, // Food ile ilişki
+        foodId: { type: String, required: true },
+        foodName: { type: String, required: true },
+        foodCategory: { type: String, required: true },
+        foodPrice: { type: Number, required: true },
+        foodImageUrl: { type: String, required: true },
         quantity: { type: Number, required: true },
       },
     ],
   },
   { timestamps: true }
 );
-
 const CartModel = mongoose.model<cartInterface>("Cart", cartSchema);
 
 //*********************************************************************************************************************
 
 //! ORDER INTERFACES
 interface OrderItem {
-  food: foodInterface;
+  foodId: string;
+  foodName: string;
+  foodCategory: string;
+  foodPrice: number;
+  foodImageUrl: string;
   quantity: number;
 }
 
 interface orderInterface extends Document {
-  userId: mongoose.Schema.Types.ObjectId; // Burada ObjectId kullanıyoruz
+  userId: string;
   items: OrderItem[];
   totalPrice: number;
   orderDate: Date;
+  status: string;
 }
 
-//! ORDER MODEL
 const orderSchema = new Schema<orderInterface>(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    userId: { type: String, required: true },
     items: [
       {
-        food: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Food",
-          required: true,
-        },
+        foodId: { type: String, required: true },
+        foodName: { type: String, required: true },
+        foodCategory: { type: String, required: true },
+        foodPrice: { type: Number, required: true },
+        foodImageUrl: { type: String, required: true },
         quantity: { type: Number, required: true },
       },
     ],
     totalPrice: { type: Number, required: true },
     orderDate: { type: Date, default: Date.now },
+    status: { type: String, default: "pending" },
   },
   { timestamps: true }
 );
+
 const OrderModel = mongoose.model<orderInterface>("Order", orderSchema);
 
-export { FoodModel, OrderModel, CartModel };
+export { FoodModel, CartModel, OrderModel };

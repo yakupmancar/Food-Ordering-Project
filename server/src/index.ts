@@ -13,8 +13,8 @@ app.use(cors());
 app.use("/api/foods", foodRoutes);
 app.use("/api/cart", cartRoutes);
 
-const port = 5001;
+const port = 5000;
 app.listen(port, () => {
   connectDB();
-  console.log("server started at http://localhost:5001");
+  console.log("server started at http://localhost:5000");
 });

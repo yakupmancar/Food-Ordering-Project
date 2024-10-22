@@ -19,7 +19,7 @@ const Foods = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/foods");
+        const response = await axios.get("http://localhost:5000/api/foods");
         setFoods(response.data);
         console.log(response.data);
       } catch (error) {
@@ -42,6 +42,7 @@ const Foods = () => {
         {filteredFoods.map((food) => (
           <Food
             key={food._id}
+            _id={food._id}
             name={food.name}
             category={food.category}
             price={food.price}

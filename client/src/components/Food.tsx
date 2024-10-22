@@ -26,7 +26,7 @@ const Food: React.FC<contextProps> = ({
 
   const handleAddToCart = () => {
     if (user && user.id) {
-      addToCart(user.id, _id, 1);
+      addToCart(user.id, _id, name, category, price, imageUrl, 1);
     } else {
       console.error("User not logged in.");
     }

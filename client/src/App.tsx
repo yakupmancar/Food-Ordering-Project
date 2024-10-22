@@ -20,7 +20,14 @@ function App() {
               </AppProvider>
             }
           />
-          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/cart"
+            element={
+              <AppProvider>
+                <Cart />
+              </AppProvider>
+            }
+          />
         </Routes>
 
         <Footer />
