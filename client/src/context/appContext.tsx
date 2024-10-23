@@ -1,5 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface AppContextType {
   selectedCategory: string | null;
@@ -15,6 +17,7 @@ interface AppContextType {
   ) => void;
   getCart: (userId: string) => void;
   cart: any;
+  deleteItem: (userId: string, foodId: string) => void;
 }
 
 //Build a context
@@ -64,6 +67,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Cart updated:", response.data);
 
       await getCart(userId);
+
+      toast.success("Ürün sepete eklendi!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
@@ -72,13 +80,31 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const getCart = async (userId: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/api/cart/${userId}`
+        `http://localhost:5000/api/cart/${userId}`
       );
       console.log("Api response", response.data);
       setCart(response.data);
     } catch (error) {
       console.error("Error fetching cart:", error);
       setCart(null);
+    }
+  };
+
+  const deleteItem = async (userId: string, foodId: string) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/cart/${userId}/${foodId}`);
+      setCart((prevCart: any) => ({
+        ...prevCart,
+        items:
+          prevCart?.items.filter((item: any) => item.foodId !== foodId) || [],
+      }));
+      console.log("Succesfull deleting item");
+      toast.success("Ürün sepetten kaldırıldı.", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+    } catch (error) {
+      console.error("Error deleting item:", error);
     }
   };
 
@@ -90,6 +116,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         addToCart,
         getCart,
         cart,
+        deleteItem,
       }}
     >
       {children}
@@ -103,3 +130,5 @@ export const useAppContext = () => {
     throw new Error("useFoodContext must be used within a FoodProvider");
   return context;
 };
+
+<ToastContainer />;

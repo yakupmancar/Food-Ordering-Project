@@ -41,13 +41,10 @@ export const addToCart = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getCart = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
     const cart = await CartModel.findOne({ userId });
-
-    console.log("Fetched Cart:", cart); // Cart verisini kontrol etmek için logla
 
     if (!cart) {
       res.status(404).json({ message: "Cart not found" });
@@ -57,5 +54,34 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error("Error fetching cart:", error);
     res.status(500).json({ message: "Error fetching cart", error });
+  }
+};
+
+export const deleteItem = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId, foodId } = req.params;
+
+    // Sepetteki öğeyi bul ve sil
+    const cart = await CartModel.findOne({ userId });
+
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found" });
+      return;
+    }
+
+    const itemIndex = cart.items.findIndex((item) => item.foodId === foodId);
+
+    if (itemIndex === -1) {
+      res.status(404).json({ message: "Item not found" });
+      return;
+    }
+
+    cart.items.splice(itemIndex, 1); // Öğeyi sepetten sil
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error: any) {
+    console.error("Error deleting item:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

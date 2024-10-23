@@ -7,10 +7,26 @@ import {
   SignInButton,
   SignUpButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
+import { useEffect } from "react";
 
 const Header = () => {
+  const { cart, getCart } = useAppContext();
+  const userId = useUser().user?.id;
+
+  // Sepet verisi yüklendiğinde çağır
+  useEffect(() => {
+    if (userId) {
+      getCart(userId);
+    }
+  }, [userId]);
+
+  // cart verisi henüz yüklenmemişse sıfır gösterir
+  const totalItems = cart && cart.items ? cart.items.length : "";
+
   return (
     <div className="flex items-center justify-between mt-4">
       <span>
@@ -36,8 +52,14 @@ const Header = () => {
           <IoSearch />
         </span>
 
-        <Link to="/Cart" className="text-4xl text-orange-900 cursor-pointer">
+        <Link
+          to="/Cart"
+          className="text-4xl text-orange-900 cursor-pointer relative"
+        >
           <FaBasketShopping />
+          <h1 className="absolute -top-2 -right-3 text-sm bg-orange-600 text-white rounded-full w-5 flex items-center justify-center">
+            {totalItems}
+          </h1>
         </Link>
 
         <div className="flex items-center gap-2 text-xl">

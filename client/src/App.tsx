@@ -4,33 +4,22 @@ import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import { AppProvider } from "./context/appContext";
 import Cart from "./pages/Cart";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <Router>
       <div className="max-w-7xl mx-auto">
-        <Header />
+        <AppProvider>
+          <Header />
+          <ToastContainer />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <AppProvider>
-                <Home />
-              </AppProvider>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <AppProvider>
-                <Cart />
-              </AppProvider>
-            }
-          />
-        </Routes>
-
-        <Footer />
+          <Footer />
+        </AppProvider>
       </div>
     </Router>
   );

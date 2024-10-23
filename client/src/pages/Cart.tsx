@@ -3,7 +3,7 @@ import { useAppContext } from "../context/appContext";
 import { useUser } from "@clerk/clerk-react";
 
 const Cart = () => {
-  const { getCart, cart } = useAppContext();
+  const { getCart, cart, deleteItem } = useAppContext();
   const { user } = useUser();
   const userId = user?.id;
 
@@ -23,9 +23,15 @@ const Cart = () => {
 
   const totalPrice = calculateTotalPrice();
 
+  const handleDelete = (foodId: string) => {
+    if (userId) {
+      deleteItem(userId, foodId);
+    }
+  };
+
   return (
-    <div>
-      <table className="w-full text-left mt-20">
+    <div className="my-20">
+      <table className="w-full text-left">
         {cart && cart.items.length > 0 ? (
           <thead className="border-b">
             <tr className="text-lg text-gray-600">
@@ -55,7 +61,9 @@ const Cart = () => {
                 <td>{item.foodPrice}₺</td>
                 <td className="pl-4">{item.quantity}</td>
                 <td className="pl-2">{item.foodPrice * item.quantity}₺</td>
-                <td className="text-2xl pl-3">X</td>
+                <td className="text-2xl pl-3">
+                  <button onClick={() => handleDelete(item.foodId)}>X</button>
+                </td>
               </tr>
             ))
           ) : (
@@ -68,33 +76,53 @@ const Cart = () => {
         </tbody>
       </table>
 
-      <section className="flex justify-between gap-40 mt-14">
-        <div className="w-1/2 text-lg">
-          <h1 className="font-semibold text-3xl mb-4">Sepet Toplamı</h1>
-          <section className="flex justify-between">
-            <h1>Toplam Tutar</h1>
-            <h1>{totalPrice}₺</h1>
-          </section>
+      {cart && cart.items.length > 0 ? (
+        <section className="flex justify-between gap-40 mt-14">
+          <div className="w-1/2 text-lg">
+            <h1 className="font-semibold text-3xl mb-4">Sepet Toplamı</h1>
+            <section className="flex justify-between">
+              <h1>Toplam Tutar</h1>
+              <h1>{totalPrice}₺</h1>
+            </section>
 
-          <div className="border my-2"></div>
+            <div className="border my-2"></div>
 
-          <section className="flex justify-between">
-            <h1>Teslimat Ücreti</h1>
-            <h1>25₺</h1>
-          </section>
+            <section className="flex justify-between">
+              <h1>Teslimat Ücreti</h1>
+              <h1>25₺</h1>
+            </section>
 
-          <div className="border my-2"></div>
+            <div className="border my-2"></div>
 
-          <section className="flex justify-between font-bold text-xl">
-            <h1>Toplam</h1>
-            <h1>{totalPrice + 25}₺</h1>
-          </section>
+            <section className="flex justify-between font-bold text-xl">
+              <h1>Toplam</h1>
+              <h1>{totalPrice + 25}₺</h1>
+            </section>
 
-          <button className="bg-orange-500 text-xl text-gray-100 px-16 py-3 font-semibold mt-7 rounded-xl">Siparişi ver</button>
-        </div>
+            <button className="bg-orange-500 text-xl text-gray-100 px-16 py-3 font-semibold mt-7 rounded-xl">
+              Siparişi ver
+            </button>
+          </div>
 
-        <div className="bg-gray-300 w-1/2">blabla</div>
-      </section>
+          <div className="w-1/2">
+            <h1 className="text-xl">
+              Promosyon kodunuz varsa, buradan kullanabilirsiniz.
+            </h1>
+            <div className="flex mt-2">
+              <input
+                type="text"
+                className="w-full rounded-md outline-none bg-gray-200 pl-2 "
+                placeholder="promosyon kodu"
+              />
+              <button className="text-lg rounded-md bg-gray-800 text-white px-14 py-2">
+                Onayla
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
