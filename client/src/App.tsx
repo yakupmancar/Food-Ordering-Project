@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { AppProvider } from "./context/appContext";
 import Cart from "./pages/Cart";
 import { ToastContainer } from "react-toastify";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -16,8 +17,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/myOrders" element={<Orders />} />
           </Routes>
-
           <Footer />
         </AppProvider>
       </div>

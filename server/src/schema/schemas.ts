@@ -59,21 +59,12 @@ const CartModel = mongoose.model<cartInterface>("Cart", cartSchema);
 //*********************************************************************************************************************
 
 //! ORDER INTERFACES
-interface OrderItem {
-  foodId: string;
-  foodName: string;
-  foodCategory: string;
-  foodPrice: number;
-  foodImageUrl: string;
-  quantity: number;
-}
 
 interface orderInterface extends Document {
   userId: string;
-  items: OrderItem[];
+  items: CartItem[];
   totalPrice: number;
   orderDate: Date;
-  status: string;
 }
 
 const orderSchema = new Schema<orderInterface>(
@@ -91,7 +82,6 @@ const orderSchema = new Schema<orderInterface>(
     ],
     totalPrice: { type: Number, required: true },
     orderDate: { type: Date, default: Date.now },
-    status: { type: String, default: "pending" },
   },
   { timestamps: true }
 );

@@ -76,7 +76,7 @@ export const deleteItem = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    cart.items.splice(itemIndex, 1); // Öğeyi sepetten sil
+    cart.items.splice(itemIndex, 1);
 
     await cart.save();
     res.status(200).json(cart);

@@ -18,6 +18,8 @@ interface AppContextType {
   getCart: (userId: string) => void;
   cart: any;
   deleteItem: (userId: string, foodId: string) => void;
+  getOrders: (userId: string) => void;
+  orders: any;
 }
 
 //Build a context
@@ -26,7 +28,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 //Build a provider for context
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   //! CATEGORY
   const updateCategory = (category: string) => {
     if (selectedCategory === category) {
@@ -108,6 +109,24 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  //**********************************************************************************************************
+
+  //! ORDERS
+  const [orders, setOrders] = useState<any>(null);
+
+  const getOrders = async (userId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/myOrders/${userId}`
+      );
+      console.log("My orders", response.data);
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      setOrders(null);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -117,6 +136,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         getCart,
         cart,
         deleteItem,
+        getOrders,
+        orders,
       }}
     >
       {children}

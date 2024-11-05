@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./db";
 import foodRoutes from "./routes/foodRoutes";
 import cartRoutes from "./routes/cartRoutes";
+import orderRoutes from "./routes/orderRoutes";
 import cors from "cors"
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use("/api/foods", foodRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/myOrders", orderRoutes);
 
 const port = 5000;
 app.listen(port, () => {

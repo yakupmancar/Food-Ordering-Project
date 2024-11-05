@@ -34,17 +34,17 @@ const Header = () => {
       </span>
       <section className="flex items-center gap-6 text-xl">
         <Link to="/" className="hover:underline">
-          home
+          anasayfa
+        </Link>
+        <Link to="/" className="hover:underline">
+          menü
         </Link>
         <a className="hover:underline" href="#">
-          menu
+          bize ulaşın
         </a>
-        <a className="hover:underline" href="#">
-          mobile app
-        </a>
-        <a className="hover:underline" href="#">
-          contact us
-        </a>
+        <Link to="/myOrders" className="hover:underline">
+          siparişlerim
+        </Link>
       </section>
 
       <section className="flex items-center gap-8">
