@@ -13,30 +13,31 @@ interface FoodInterface {
 }
 
 const Foods = () => {
-  const { selectedCategory } = useAppContext();
-  const [foods, setFoods] = useState<FoodInterface[]>([]);
+  const { selectedCategory } = useAppContext(); // Kategori işlemleri için contex'ten ilgili fonksiyonu çekeriz.
+  const [foods, setFoods] = useState<FoodInterface[]>([]); // Yemeklerin listesini tutmak ve güncellemek için oluştururuz.
 
+  // Sayfa ilk açıldığında yemek verilerini veritabanından çekmiş oluruz;
   useEffect(() => {
     const fetchFoods = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/foods");
         setFoods(response.data);
-        console.log(response.data);
+        console.log("Yemek verileri:", response.data);
       } catch (error) {
-        console.log(error);
+        console.log("Yemek verilerini çekme sırasında hata:", error);
       }
     };
     fetchFoods();
   }, []);
 
-  // If there is selectedCategory
+  // Seçilen belirli bir kategori varsa ona uygun yemekler döner, yoksa tüm yemekler döner;
   const filteredFoods = selectedCategory
     ? foods.filter((food) => food.category === selectedCategory)
     : foods;
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-7">Top dishes near you</h1>
+      <h1 className="text-4xl font-bold mb-7">Yakınınızdaki en iyi yemekler</h1>
 
       <div className="flex flex-wrap items-center gap-x-[26.2px] gap-y-10">
         {filteredFoods.map((food) => (

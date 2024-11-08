@@ -1,25 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useUser } from "@clerk/clerk-react";
 import { FaTimes } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
 import { FiMinus } from "react-icons/fi";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { getCart, cart, deleteItem } = useAppContext();
+  const { getCart, cart, deleteItem, setCart, updateQuantity } =
+    useAppContext();
   const { user } = useUser();
   const userId = user?.id;
 
+  // Kullanıcı değiştiğinde o kullanıcının sepet içeriğini getirmek için kullanırız;
   useEffect(() => {
     if (userId) {
       getCart(userId);
     }
   }, [userId]);
 
+  //Toplam ücret hesaplama;
   const calculateTotalPrice = () => {
     if (!cart || !cart.items) return 0;
     return cart.items.reduce(
@@ -29,14 +32,14 @@ const Cart = () => {
   };
   const totalPrice = calculateTotalPrice();
 
-  //! Delete product from cart
+  //! Sepetten Ürün Silmek;
   const handleDelete = (foodId: string) => {
     if (userId) {
       deleteItem(userId, foodId);
     }
   };
 
-  //! PLACE ORDER
+  //! Sipariş Vermek;
   const navigate = useNavigate();
 
   const placeOrder = async () => {
@@ -48,8 +51,6 @@ const Cart = () => {
       foodImageUrl: item.foodImageUrl,
       quantity: item.quantity,
     }));
-
-    console.log("Sipariş edilen ürünler:", items);
 
     try {
       const response = await axios.post("http://localhost:5000/api/myOrders", {
@@ -63,14 +64,36 @@ const Cart = () => {
         position: "top-right",
         autoClose: 1500,
       });
+      console.log("Verilen sipariş:", response.data);
 
+      // Sipariş verildikten 1.5 saniye sonra sipariş ekranına yönlendirilir.
       setTimeout(() => {
         navigate("/myOrders");
       }, 1500);
 
-      console.log(response.data);
+      // Tüm ürünleri sepetten sil
+      for (const item of cart.items) {
+        await deleteItem(userId as string, item.foodId as string);
+      }
+
+      // Sepeti tamamen temizle
+      setCart({ items: [] });
     } catch (error) {
       console.error("Sipariş verirken hata oluştu:", error);
+    }
+  };
+
+  //! Miktar Güncelleme;
+  // Ürün mitkarını arttırma;
+  const handleIncrease = (foodId: string, quantity: number) => {
+    updateQuantity(userId as string, foodId, quantity + 1);
+  };
+
+  // Ürün miktarını azaltma;
+  const handleDecrease = (foodId: string, quantity: number) => {
+    updateQuantity(userId as string, foodId, quantity - 1);
+    if (quantity > 1) {
+      updateQuantity(userId as string, foodId, quantity - 1);
     }
   };
 
@@ -81,7 +104,7 @@ const Cart = () => {
           <thead className="border-b">
             <tr className="text-lg text-gray-600">
               <th className="pb-4">Yemek</th>
-              <th className="pb-4">Yemeğin ismi</th>
+              <th className="pb-4">Yemek ismi</th>
               <th className="pb-4">Tutar</th>
               <th className="pb-4">Miktar</th>
               <th className="pb-4">Toplam</th>
@@ -92,12 +115,12 @@ const Cart = () => {
           ""
         )}
         <tbody>
-          {cart ? (
+          {cart && cart.items.length > 0 ? (
             cart.items.map((item: any) => (
               <tr key={item._id} className="border-b text-lg">
                 <td>
                   <img
-                    className="w-28 object-cover py-4"
+                    className="w-28 h-28 object-cover py-4"
                     src={item.foodImageUrl}
                     alt={item.foodName}
                   />
@@ -106,16 +129,24 @@ const Cart = () => {
                 <td>{item.foodPrice}₺</td>
                 <td className="px-1">
                   <div className="flex items-center gap-1">
-                    <button className="text-sm">
+                    <button
+                      onClick={() => handleIncrease(item.foodId, item.quantity)}
+                      className="text-sm"
+                    >
                       <FiPlus />
                     </button>
                     <span>{item.quantity}</span>
-                    <button className="text-sm">
+                    <button
+                      onClick={() => handleDecrease(item.foodId, item.quantity)}
+                      className="text-sm"
+                    >
                       <FiMinus />
                     </button>
                   </div>
                 </td>
-                <td className="pl-2">{item.foodPrice * item.quantity}₺</td>
+                <td className="pl-2 font-semibold">
+                  {item.foodPrice * item.quantity}₺
+                </td>
                 <td className="text-2xl pl-3">
                   <button onClick={() => handleDelete(item.foodId)}>
                     <FaTimes />
@@ -183,7 +214,6 @@ const Cart = () => {
       ) : (
         ""
       )}
-      <ToastContainer />
     </div>
   );
 };

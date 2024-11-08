@@ -11,6 +11,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors());
 
+//ROUTES
 app.use("/api/foods", foodRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/myOrders", orderRoutes);

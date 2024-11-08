@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-//! FOOD INTERFACE
 interface foodInterface extends Document {
   name: string;
   category: string;
@@ -9,7 +8,7 @@ interface foodInterface extends Document {
   imageUrl: string;
 }
 
-//! FOOD MODEL
+//! FOOD ŞEMASI
 const foodSchema = new Schema<foodInterface>(
   {
     name: { type: String, required: true },
@@ -20,6 +19,8 @@ const foodSchema = new Schema<foodInterface>(
   },
   { timestamps: true }
 );
+
+// "Food" koleksiyonunu temsil eden model.
 const FoodModel = mongoose.model<foodInterface>("Food", foodSchema);
 
 //*********************************************************************************************************************
@@ -38,6 +39,7 @@ interface cartInterface extends Document {
   items: CartItem[];
 }
 
+//! CART ŞEMASI
 const cartSchema = new Schema<cartInterface>(
   {
     userId: { type: String, required: true },
@@ -54,11 +56,11 @@ const cartSchema = new Schema<cartInterface>(
   },
   { timestamps: true }
 );
+
+// "Cart" koleksiyonunu temsil eden model.
 const CartModel = mongoose.model<cartInterface>("Cart", cartSchema);
 
 //*********************************************************************************************************************
-
-//! ORDER INTERFACES
 
 interface orderInterface extends Document {
   userId: string;
@@ -67,6 +69,7 @@ interface orderInterface extends Document {
   orderDate: Date;
 }
 
+//! ORDER ŞEMASI
 const orderSchema = new Schema<orderInterface>(
   {
     userId: { type: String, required: true },
@@ -86,6 +89,7 @@ const orderSchema = new Schema<orderInterface>(
   { timestamps: true }
 );
 
+// "Order" koleksiyonunu temsil eden model.
 const OrderModel = mongoose.model<orderInterface>("Order", orderSchema);
 
 export { FoodModel, CartModel, OrderModel };

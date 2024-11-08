@@ -14,17 +14,17 @@ import { useAppContext } from "../context/appContext";
 import { useEffect } from "react";
 
 const Header = () => {
-  const { cart, getCart } = useAppContext();
-  const userId = useUser().user?.id;
+  const { cart, getCart } = useAppContext();  // Sepet verilerini context'ten çekeriz.
+  const userId = useUser().user?.id;  // user bilgisini clerk yardımıyla çekeriz.
 
-  // Sepet verisi yüklendiğinde çağır
+  // Eğer kullanıcı oturum açmışsa, sepet verisi yüklendiğinde çağır;
   useEffect(() => {
     if (userId) {
       getCart(userId);
     }
   }, [userId]);
 
-  // cart verisi henüz yüklenmemişse sıfır gösterir
+  // cart verisi henüz yüklenmemişse sıfır gösterir;
   const totalItems = cart && cart.items ? cart.items.length : "";
 
   return (

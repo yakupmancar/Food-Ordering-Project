@@ -1,7 +1,5 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 interface AppContextType {
   selectedCategory: string | null;
@@ -17,18 +15,20 @@ interface AppContextType {
   ) => void;
   getCart: (userId: string) => void;
   cart: any;
+  setCart: (items: any) => void;
   deleteItem: (userId: string, foodId: string) => void;
-  getOrders: (userId: string) => void;
-  orders: any;
+  updateQuantity: (userId: string, foodId: string, quantity: number) => void;
 }
 
-//Build a context
+//context create ederiz;
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-//Build a provider for context
+//context için bir provider oluştururuz;
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); //Kullanıcı tarafından seçilen kategori bilgisini tutar.
+
   //! CATEGORY
+  //Kategori bilgisini güncelleriz;
   const updateCategory = (category: string) => {
     if (selectedCategory === category) {
       setSelectedCategory(null);
@@ -40,8 +40,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   //**********************************************************************************************************
 
   //! CART
-  const [cart, setCart] = useState<any>(null);
+  const [cart, setCart] = useState<any>(null); // Sepetteki tüm ürünlerin bilgisini tutmak ve güncellemek için oluştururuz.
 
+  //Sepete ürün ekleme fonksiyonu;
   const addToCart = async (
     userId: string,
     foodId: string,
@@ -65,32 +66,29 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           },
         ],
       });
-      console.log("Cart updated:", response.data);
-
+      console.log("Ürün sepete başarıyla eklendi:", response.data);
       await getCart(userId);
-
-      toast.success("Ürün sepete eklendi!", {
-        position: "top-right",
-        autoClose: 1500,
-      });
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error("Sepete ürün ekleme sırasında hata:", error);
     }
   };
 
+  //Kullanıcıya ait sepet içeriğini getiririz;
   const getCart = async (userId: string) => {
     try {
       const response = await axios.get(
         `http://localhost:5000/api/cart/${userId}`
       );
-      console.log("Api response", response.data);
-      setCart(response.data);
+      console.log("Sepet içeriği:", response.data);
+      setCart(response.data); // Sepet içeriğini güncelleriz.
     } catch (error) {
-      console.error("Error fetching cart:", error);
+      console.error("Sepet içeriğini getirme sırasında hata:", error);
       setCart(null);
     }
   };
 
+  //! DELETE ITEM;
+  //Sepetten ürün silmek için oluştururuz;
   const deleteItem = async (userId: string, foodId: string) => {
     try {
       await axios.delete(`http://localhost:5000/api/cart/${userId}/${foodId}`);
@@ -99,33 +97,32 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         items:
           prevCart?.items.filter((item: any) => item.foodId !== foodId) || [],
       }));
-      console.log("Succesfull deleting item");
-      toast.success("Ürün sepetten kaldırıldı.", {
-        position: "top-right",
-        autoClose: 1500,
-      });
+      console.log("Ürün sepetten başarıyla kaldırıldı.");
     } catch (error) {
-      console.error("Error deleting item:", error);
+      console.error("Sepetten ürün kaldırma sırasında hata:", error);
+    }
+  };
+
+  //! UPDATE QUANTITY
+  // Sepetteki belirli bir ürünün miktarını güncellemek için oluştururuz;
+  const updateQuantity = async (
+    userId: string,
+    foodId: string,
+    quantity: number
+  ) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/cart/${userId}/${foodId}`,
+        { quantity }
+      );
+      console.log("Miktar başarıyla güncellendi: ", response.data);
+      await getCart(userId);
+    } catch (error) {
+      console.error("Ürün miktarı güncelleme sırasında hata:", error);
     }
   };
 
   //**********************************************************************************************************
-
-  //! ORDERS
-  const [orders, setOrders] = useState<any>(null);
-
-  const getOrders = async (userId: string) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/myOrders/${userId}`
-      );
-      console.log("My orders", response.data);
-      setOrders(response.data);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-      setOrders(null);
-    }
-  };
 
   return (
     <AppContext.Provider
@@ -135,9 +132,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         addToCart,
         getCart,
         cart,
+        setCart,
         deleteItem,
-        getOrders,
-        orders,
+        updateQuantity,
       }}
     >
       {children}
@@ -145,11 +142,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+//context içeriğine erişmek için oluştururuz;
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context)
-    throw new Error("useFoodContext must be used within a FoodProvider");
+    throw new Error("useAppContext AppProvider ile kullanılmalıdır.");
   return context;
 };
-
-<ToastContainer />;

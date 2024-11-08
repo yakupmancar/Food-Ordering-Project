@@ -2,7 +2,7 @@ import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { useAppContext } from "../context/appContext";
 import { useUser } from "@clerk/clerk-react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface contextProps {
@@ -29,8 +29,12 @@ const Food: React.FC<contextProps> = ({
   const handleAddToCart = () => {
     if (user && user.id) {
       addToCart(user.id, _id, name, category, price, imageUrl, 1);
+      toast.success("Ürün sepete eklendi!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
     } else {
-      console.error("User not logged in.");
+      console.error("Kullanıcı girişi yapılmadı.");
       toast.warning("Lütfen giriş yapınız.", {
         position: "top-right",
         autoClose: 1500,
@@ -68,7 +72,6 @@ const Food: React.FC<contextProps> = ({
           </button>
         </div>
       </section>
-      <ToastContainer />
     </div>
   );
 };
