@@ -42,26 +42,26 @@ const Categories = () => {
   ];
 
   return (
-    <div className="my-12">
-      <h1 className="font-bold text-4xl mb-2">Explore our menu</h1>
-      <p className="w-2/3 mb-8 font-semibold text-gray-500">
+    <div className="my-9 lg:my-12">
+      <h1 className="font-bold text-3xl lg:text-4xl mb-2">Explore our menu</h1>
+      <p className="lg:w-2/3 mb-10 lg:mb-14 font-semibold text-gray-500">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur
         exercitationem ipsum rem mollitia praesentium nemo a expedita amet
         repellat harum provident architecto, fugiat porro. Soluta rem velit
         nobis temporibus! Qui.
       </p>
-      <div className="flex items-center justify-between mx-20">
+      <div className="flex flex-wrap gap-y-5 items-center sm:justify-between gap-5 sm:gap-0 xl:mx-32 md:mx-20 sm:mx-10">
         {categories.map((category) => (
           <div
             key={category.name}
-            className="flex flex-col items-center justify-center gap-3 cursor-pointer"
+            className="flex flex-col items-center justify-center md:gap-3 cursor-pointer"
             onClick={() => setSelectedCategory(category.name)}
           >
             <img
               src={category.imageUrl}
-              className={`w-28 h-28 rounded-full object-cover ${selectedCategory === category.name ? "border-4 p-[2px] transition-all duration-150 border-orange-600" : ""}`}
+              className={`lg:w-28 md:w-20 md:h-20 w-16 h-16 lg:h-28 rounded-full object-cover ${selectedCategory === category.name ? "border-4 p-[2px] transition-all duration-150 border-orange-600" : ""}`}
             />
-            <h1 className="font-semibold text-gray-500 text-lg">
+            <h1 className="font-semibold text-gray-500 text-md xl:text-lg">
               {category.name}
             </h1>
           </div>

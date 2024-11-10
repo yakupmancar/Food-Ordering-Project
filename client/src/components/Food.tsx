@@ -43,11 +43,11 @@ const Food: React.FC<contextProps> = ({
   };
 
   return (
-    <div className="flex flex-col max-w-[235px] h-[400px] rounded-2xl shadow-2xl transition-transform duration-300 ease-in-out hover:scale-105">
+    <div className="flex flex-col rounded-2xl shadow-2xl transition-transform duration-300 ease-in-out hover:scale-105">
       <section>
         <img
           src={imageUrl}
-          className="w-[235px] h-[235px] object-cover rounded-t-xl"
+          className="w-full h-[235px] object-cover rounded-t-xl"
         />
       </section>
       <section className="mx-3 my-5 flex flex-col gap-2">

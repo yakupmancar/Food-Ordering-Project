@@ -39,7 +39,7 @@ const Foods = () => {
     <div>
       <h1 className="text-4xl font-bold mb-7">Yakınınızdaki en iyi yemekler</h1>
 
-      <div className="flex flex-wrap items-center gap-x-[26.2px] gap-y-10">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 gap-y-10">
         {filteredFoods.map((food) => (
           <Food
             key={food._id}

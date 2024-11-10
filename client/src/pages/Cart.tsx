@@ -102,13 +102,13 @@ const Cart = () => {
       <table className="w-full text-left">
         {cart && cart.items.length > 0 ? (
           <thead className="border-b">
-            <tr className="text-lg text-gray-600">
-              <th className="pb-4">Yemek</th>
-              <th className="pb-4">Yemek ismi</th>
-              <th className="pb-4">Tutar</th>
-              <th className="pb-4">Miktar</th>
-              <th className="pb-4">Toplam</th>
-              <th className="pb-4">Kaldır</th>
+            <tr className="text-sm md:text-base xl:text-lg text-gray-600">
+              <th className="pb-2 md:pb-4">Yemek ismi</th>
+              <th className="pb-2 md:pb-4">Yemek</th>
+              <th className="pb-2 md:pb-4">Tutar</th>
+              <th className="pb-2 md:pb-4">Miktar</th>
+              <th className="pb-2 md:pb-4">Toplam</th>
+              <th className="pb-2 md:pb-4">Kaldır</th>
             </tr>
           </thead>
         ) : (
@@ -117,37 +117,40 @@ const Cart = () => {
         <tbody>
           {cart && cart.items.length > 0 ? (
             cart.items.map((item: any) => (
-              <tr key={item._id} className="border-b text-lg">
-                <td>
+              <tr
+                key={item._id}
+                className="border-b text-sm md:text-base xl:text-lg"
+              >
+                <td className="w-1/5">
                   <img
-                    className="w-28 h-28 object-cover py-4"
+                    className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 xl:w-28 xl:h-28 object-cover py-2 md:py-4"
                     src={item.foodImageUrl}
                     alt={item.foodName}
                   />
                 </td>
-                <td>{item.foodName}</td>
+                <td className="w-1/5">{item.foodName}</td>
                 <td>{item.foodPrice}₺</td>
-                <td className="px-1">
+                <td className="px-1 w-1/6">
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleIncrease(item.foodId, item.quantity)}
-                      className="text-sm"
+                      className="text-xs md:text-sm"
                     >
                       <FiPlus />
                     </button>
                     <span>{item.quantity}</span>
                     <button
                       onClick={() => handleDecrease(item.foodId, item.quantity)}
-                      className="text-sm"
+                      className="text-xs md:text-sm"
                     >
                       <FiMinus />
                     </button>
                   </div>
                 </td>
-                <td className="pl-2 font-semibold">
+                <td className="pl-2 font-semibold w-1/5">
                   {item.foodPrice * item.quantity}₺
                 </td>
-                <td className="text-2xl pl-3">
+                <td className="text-base md:text-lg lg:text-xl xl:text-2xl pl-3 w-1/12">
                   <button onClick={() => handleDelete(item.foodId)}>
                     <FaTimes />
                   </button>
@@ -164,52 +167,54 @@ const Cart = () => {
         </tbody>
       </table>
       {cart && cart.items.length > 0 ? (
-        <section className="flex justify-between gap-40 mt-14">
-          <div className="w-1/2 text-lg">
-            <h1 className="font-semibold text-3xl mb-4">Sepet Toplamı</h1>
-            <section className="flex justify-between">
+        <section className="md:flex justify-between gap-40 mt-14">
+          <form className="w-full md:w-[40%]">
+            <h1 className="text-lg md:text-xl">
+              Promosyon kodunuz varsa, buradan kullanabilirsiniz.
+            </h1>
+            <div className="flex mt-2">
+              <input
+                type="text"
+                className="w-full rounded-s-md outline-none bg-gray-200 pl-2 "
+                placeholder="promosyon kodu"
+                required
+              />
+              <button className="text-base md:text-lg rounded-e-md bg-gray-800 text-white px-4 md:px-8 lg:px-10 xl:px-14 py-2">
+                Onayla
+              </button>
+            </div>
+          </form>
+
+          <div className="w-full md:w-[60%] text-lg mt-14 md:mt-0">
+            <h1 className="font-semibold text-xl lg:text-2xl xl:text-3xl mb-4">
+              Sepet Toplamı
+            </h1>
+            <section className="flex justify-between text-sm md:text-base">
               <h1>Toplam Tutar</h1>
               <h1>{totalPrice}₺</h1>
             </section>
 
             <div className="border my-2"></div>
 
-            <section className="flex justify-between">
+            <section className="flex justify-between text-sm md:text-base">
               <h1>Teslimat Ücreti</h1>
               <h1>25₺</h1>
             </section>
 
             <div className="border my-2"></div>
 
-            <section className="flex justify-between font-bold text-xl">
+            <section className="flex justify-between font-bold text-sm md:text-base">
               <h1>Toplam</h1>
               <h1>{totalPrice + 25}₺</h1>
             </section>
 
             <button
               onClick={placeOrder}
-              className="bg-orange-500 text-xl text-gray-100 px-16 py-3 font-semibold mt-7 rounded-xl"
+              className="bg-orange-500 text-base md:text-lg xl:text-xl text-gray-100 px-6 md:px-8 lg:px-12 xl:px-16 py-2 md:py-3 font-semibold mt-7 rounded-xl"
             >
               Siparişi ver
             </button>
           </div>
-
-          <form className="w-1/2">
-            <h1 className="text-xl">
-              Promosyon kodunuz varsa, buradan kullanabilirsiniz.
-            </h1>
-            <div className="flex mt-2">
-              <input
-                type="text"
-                className="w-full rounded-md outline-none bg-gray-200 pl-2 "
-                placeholder="promosyon kodu"
-                required
-              />
-              <button className="text-lg rounded-md bg-gray-800 text-white px-14 py-2">
-                Onayla
-              </button>
-            </div>
-          </form>
         </section>
       ) : (
         ""

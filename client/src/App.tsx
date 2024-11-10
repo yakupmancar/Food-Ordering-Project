@@ -10,7 +10,7 @@ import Orders from "./pages/Orders";
 function App() {
   return (
     <Router>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-10 2xl:px-0">
         <AppProvider>
           <Header />
           <ToastContainer />
@@ -19,9 +19,9 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/myOrders" element={<Orders />} />
           </Routes>
-          <Footer />
         </AppProvider>
       </div>
+      <Footer />
     </Router>
   );
 }

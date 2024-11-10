@@ -50,21 +50,22 @@ const Orders = () => {
         orders.map((order: any) => (
           <div
             key={order._id}
-            className="border shadow-lg rounded-xl flex items-center justify-between gap-20 py-7 text-lg px-4 my-8"
+            className="border shadow-lg rounded-xl flex items-center justify-between py-4 md:gap-10 md:py-5 xl:gap-20 xl:py-7 text-xs sm:text-sm md:text-base xl:text-lg px-2 md:px-4 my-8"
           >
-            <section className="flex w-1/3">
+            <section className="lg:flex w-1/4 sm:w-1/3">
               {order.items.map((item: any) => (
                 <div key={item._id}>
                   {item.foodName} x {item.quantity}
-                  <span className="border-l border-gray-700 mx-2"></span>
+                  <span className="lg:border-l border-gray-700 mx-2"></span>
                 </div>
               ))}
             </section>
-            <section>{order.totalPrice + 25}₺</section>
+            <section className="w-1/6">{order.totalPrice + 25}₺</section>
+            
             <section>{formatDate(order.orderDate)}</section>
-            <section className="flex items-center gap-2">
-              <FaCheck className="text-green-500 text-2xl" />
-              <span>Sipariş teslim edildi.</span>
+            <section className="flex items-center gap-1 xl:gap-2 justify-end w-1/6 sm:1-/4">
+              <FaCheck className=" text-green-500 text-lg md:text-xl xl:text-2xl" />
+              <span>Teslim edildi.</span>
             </section>
           </div>
         ))
